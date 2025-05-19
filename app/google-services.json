@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "109656188760",
+    "project_id": "calendarioacademico-f35d8",
+    "storage_bucket": "calendarioacademico-f35d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109656188760:android:787dab5cdc9b9d99eb672d",
+        "android_client_info": {
+          "package_name": "com.unacar.calendarioacademico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR_ZbEK_S7NhlZkZDbah15_e78p4u4oIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

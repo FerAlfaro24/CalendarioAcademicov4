@@ -1,0 +1,95 @@
+<resources>
+    <!-- Cadenas de la aplicación -->
+    <string name="app_name">Calendario Académico</string>
+    <string name="calendario_academico">Calendario Académico</string>
+    <string name="bienvenido_al_calendario_academico">Bienvenido al Calendario Académico</string>
+
+    <!-- Cadenas para el Navigation Drawer -->
+    <string name="nav_header_title">Calendario Académico</string>
+    <string name="nav_header_subtitle">Universidad Autónoma del Carmen</string>
+    <string name="nav_header_desc">Imagen de encabezado del navegador</string>
+    <string name="navigation_drawer_open">Abrir panel de navegación</string>
+    <string name="navigation_drawer_close">Cerrar panel de navegación</string>
+
+    <!-- Cadenas para menús -->
+    <string name="action_settings">Configuración</string>
+    <string name="action_cerrar_sesion">Cerrar sesión</string>
+
+    <!-- Menú de navegación original (sustituir por nuevos) -->
+    <string name="menu_gallery">Galería</string>
+    <string name="menu_slideshow">Presentación</string>
+
+    <!-- Nuevo menú de navegación -->
+    <string name="menu_home">Inicio</string>
+    <string name="menu_calendario">Calendario</string>
+    <string name="menu_materias">Materias</string>
+    <string name="menu_notificaciones">Notificaciones</string>
+    <string name="menu_opciones_adicionales">Opciones adicionales</string>
+    <string name="menu_crear_materia">Crear materia</string>
+    <string name="menu_gestionar_estudiantes">Gestionar estudiantes</string>
+    <string name="menu_perfil">Mi perfil</string>
+
+    <!-- Cadenas para la pantalla de inicio de sesión -->
+    <string name="logo_app">Logo de la aplicación</string>
+    <string name="correo_electronico">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="no_cuenta_registrate">¿No tienes cuenta? Regístrate aquí</string>
+
+    <!-- Cadenas para la pantalla de registro -->
+    <string name="registro_usuario">Registro de Usuario</string>
+    <string name="nombre_completo">Nombre completo</string>
+    <string name="confirmar_contrasena">Confirmar contraseña</string>
+    <string name="estudiante">Estudiante</string>
+    <string name="profesor">Profesor</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="ya_tengo_cuenta">Ya tengo una cuenta</string>
+
+    <!-- Cadenas para fragmentos y características específicas -->
+    <string name="crear_evento">Crear evento</string>
+    <string name="modificar_evento">Modificar evento</string>
+    <string name="eliminar_evento">Eliminar evento</string>
+    <string name="filtrar_calendario">Filtrar calendario</string>
+    <string name="fecha">Fecha</string>
+    <string name="hora">Hora</string>
+    <string name="tipo_evento">Tipo de evento</string>
+    <string name="examen">Examen</string>
+    <string name="tarea">Tarea</string>
+    <string name="proyecto">Proyecto</string>
+    <string name="guardar">Guardar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="descripcion">Descripción</string>
+    <string name="titulo">Título</string>
+    <string name="seleccionar_materia">Seleccionar materia</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="crear">Crear</string>
+    <string name="filtrar">Filtrar</string>
+
+    <!-- HomeFragment -->
+    <string name="proximos_eventos">Próximos eventos</string>
+    <string name="no_hay_eventos_proximos">No hay eventos próximos</string>
+    <string name="mis_materias">Mis materias</string>
+    <string name="no_hay_materias_registradas">No hay materias registradas</string>
+    <string name="tipo_profesor">Tipo: Profesor</string>
+    <string name="tipo_estudiante">Tipo: Estudiante</string>
+
+    <!-- Gestión de materias -->
+    <string name="crear_nueva_materia">Crear Nueva Materia</string>
+    <string name="nombre_materia">Nombre de la materia</string>
+    <string name="descripcion_materia">Descripción de la materia</string>
+    <string name="semestre">Semestre</string>
+    <string name="crear_materia">Crear materia</string>
+
+    <!-- Detalle de materia y gestión de estudiantes -->
+    <string name="detalle_materia">Detalle de materia</string>
+    <string name="estudiantes_inscritos">Estudiantes inscritos</string>
+    <string name="no_hay_estudiantes_inscritos">No hay estudiantes inscritos</string>
+    <string name="agregar_estudiantes">Agregar estudiantes</string>
+    <string name="ver_eventos">Ver eventos</string>
+    <string name="eliminar_estudiante">Eliminar estudiante</string>
+    <string name="buscar_estudiante">Buscar estudiante por correo</string>
+    <string name="buscar">Buscar</string>
+    <string name="agregar">Agregar</string>
+    <string name="no_hay_estudiantes_para_agregar">No hay estudiantes disponibles para agregar</string>
+    <string name="eventos_materia">Eventos de la materia</string>
+</resources>

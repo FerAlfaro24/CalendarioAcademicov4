@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.unacar.calendarioacademico.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_calendario"
+        android:name="com.unacar.calendarioacademico.ui.calendario.CalendarioFragment"
+        android:label="@string/menu_calendario"
+        tools:layout="@layout/fragment_calendario" />
+
+    <fragment
+        android:id="@+id/nav_materias"
+        android:name="com.unacar.calendarioacademico.ui.materias.MateriasFragment"
+        android:label="@string/menu_materias"
+        tools:layout="@layout/fragment_materias">
+        <action
+            android:id="@+id/action_nav_materias_to_detalleMateria"
+            app:destination="@id/nav_materia_detalle" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_notificaciones"
+        android:name="com.unacar.calendarioacademico.ui.notificaciones.NotificacionesFragment"
+        android:label="@string/menu_notificaciones"
+        tools:layout="@layout/fragment_notificaciones" />
+
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="com.unacar.calendarioacademico.ui.perfil.PerfilFragment"
+        android:label="@string/menu_perfil"
+        tools:layout="@layout/fragment_perfil" />
+
+    <fragment
+        android:id="@+id/nav_crear_materia"
+        android:name="com.unacar.calendarioacademico.ui.materias.CrearMateriaFragment"
+        android:label="@string/crear_materia"
+        tools:layout="@layout/fragment_crear_materia" />
+
+    <fragment
+        android:id="@+id/nav_gestionar_estudiantes"
+        android:name="com.unacar.calendarioacademico.ui.estudiantes.GestionarEstudiantesFragment"
+        android:label="@string/menu_gestionar_estudiantes"
+        tools:layout="@layout/fragment_gestionar_estudiantes" />
+
+    <fragment
+        android:id="@+id/nav_materia_detalle"
+        android:name="com.unacar.calendarioacademico.ui.materias.DetalleMateriaFragment"
+        android:label="@string/detalle_materia"
+        tools:layout="@layout/fragment_detalle_materia">
+        <argument
+            android:name="materiaId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_detalleMateria_to_agregarEstudiantes"
+            app:destination="@id/nav_agregar_estudiantes" />
+        <action
+            android:id="@+id/action_detalleMateria_to_eventosMateria"
+            app:destination="@id/nav_eventos_materia" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_agregar_estudiantes"
+        android:name="com.unacar.calendarioacademico.ui.estudiantes.AgregarEstudiantesFragment"
+        android:label="@string/agregar_estudiantes"
+        tools:layout="@layout/fragment_agregar_estudiantes">
+        <argument
+            android:name="materiaId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_eventos_materia"
+        android:name="com.unacar.calendarioacademico.ui.eventos.EventosMateriaFragment"
+        android:label="@string/eventos_materia"
+        tools:layout="@layout/fragment_eventos_materia">
+        <argument
+            android:name="materiaId"
+            app:argType="string" />
+    </fragment>
+</navigation>

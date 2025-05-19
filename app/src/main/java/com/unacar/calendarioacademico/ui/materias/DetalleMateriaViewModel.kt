@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.unacar.calendarioacademico.modelos.Materia
 import com.unacar.calendarioacademico.modelos.Usuario
 import com.unacar.calendarioacademico.utilidades.AdministradorFirebase
@@ -28,6 +29,11 @@ class DetalleMateriaViewModel : ViewModel() {
 
     private val _esProfesor = MutableLiveData<Boolean>()
     val esProfesor: LiveData<Boolean> = _esProfesor
+
+    private val _eliminacionExitosa = MutableLiveData<Boolean>()
+    val eliminacionExitosa: LiveData<Boolean> = _eliminacionExitosa
+
+    private var listenerEstudiantes: ListenerRegistration? = null
 
     init {
         verificarTipoUsuario()
@@ -100,59 +106,49 @@ class DetalleMateriaViewModel : ViewModel() {
     }
 
     private fun cargarEstudiantes(idMateria: String) {
-        AdministradorFirebase.obtenerEstudiantesMateria(idMateria).get()
-            .addOnSuccessListener { querySnapshot ->
-                val idsEstudiantes = mutableListOf<String>()
+        // Detener listener anterior si existe
+        listenerEstudiantes?.remove()
 
-                for (documento in querySnapshot.documents) {
-                    val idEstudiante = documento.getString("idEstudiante")
-                    if (idEstudiante != null) {
-                        idsEstudiantes.add(idEstudiante)
-                    }
-                }
-
-                if (idsEstudiantes.isEmpty()) {
-                    _estudiantes.value = emptyList()
-                    _cargando.value = false
-                    return@addOnSuccessListener
-                }
-
-                // Obtener datos de cada estudiante
-                val listaEstudiantes = mutableListOf<Usuario>()
-                var estudiantesCompletados = 0
-
-                for (idEstudiante in idsEstudiantes) {
-                    AdministradorFirebase.obtenerPerfilUsuario(idEstudiante).get()
-                        .addOnSuccessListener { documento ->
-                            estudiantesCompletados++
-
-                            if (documento.exists()) {
-                                val estudiante = documento.toObject(Usuario::class.java)
-                                if (estudiante != null) {
-                                    estudiante.id = documento.id
-                                    listaEstudiantes.add(estudiante)
-                                }
-                            }
-
-                            if (estudiantesCompletados == idsEstudiantes.size) {
-                                _estudiantes.value = listaEstudiantes
-                                _cargando.value = false
-                            }
-                        }
-                        .addOnFailureListener {
-                            estudiantesCompletados++
-
-                            if (estudiantesCompletados == idsEstudiantes.size) {
-                                _estudiantes.value = listaEstudiantes
-                                _cargando.value = false
-                            }
-                        }
-                }
-            }
-            .addOnFailureListener {
-                _error.value = "Error al cargar estudiantes: ${it.message}"
+        // Crear nuevo listener en tiempo real
+        listenerEstudiantes = AdministradorFirebase.escucharEstudiantesMateria(idMateria) { idsEstudiantes ->
+            if (idsEstudiantes.isEmpty()) {
+                _estudiantes.value = emptyList()
                 _cargando.value = false
+                return@escucharEstudiantesMateria
             }
+
+            // Obtener datos de cada estudiante
+            val listaEstudiantes = mutableListOf<Usuario>()
+            var estudiantesCompletados = 0
+
+            for (idEstudiante in idsEstudiantes) {
+                AdministradorFirebase.obtenerPerfilUsuario(idEstudiante).get()
+                    .addOnSuccessListener { documento ->
+                        estudiantesCompletados++
+
+                        if (documento.exists()) {
+                            val estudiante = documento.toObject(Usuario::class.java)
+                            if (estudiante != null) {
+                                estudiante.id = documento.id
+                                listaEstudiantes.add(estudiante)
+                            }
+                        }
+
+                        if (estudiantesCompletados == idsEstudiantes.size) {
+                            _estudiantes.value = listaEstudiantes
+                            _cargando.value = false
+                        }
+                    }
+                    .addOnFailureListener {
+                        estudiantesCompletados++
+
+                        if (estudiantesCompletados == idsEstudiantes.size) {
+                            _estudiantes.value = listaEstudiantes
+                            _cargando.value = false
+                        }
+                    }
+            }
+        }
     }
 
     fun eliminarEstudiante(idEstudiante: String, idMateria: String) {
@@ -160,12 +156,56 @@ class DetalleMateriaViewModel : ViewModel() {
 
         AdministradorFirebase.eliminarInscripcion(idEstudiante, idMateria)
             .addOnSuccessListener {
-                // Recargar lista de estudiantes
-                cargarEstudiantes(idMateria)
+                // No es necesario recargar estudiantes porque el listener lo hace automáticamente
+                _cargando.value = false
             }
             .addOnFailureListener {
                 _error.value = "Error al eliminar estudiante: ${it.message}"
                 _cargando.value = false
             }
+    }
+
+    fun eliminarMateria(idMateria: String) {
+        _cargando.value = true
+
+        // Primero eliminar todas las inscripciones asociadas a esta materia
+        AdministradorFirebase.eliminarInscripcionesMateria(idMateria)
+            .addOnSuccessListener { querySnapshot ->
+                val batch = FirebaseFirestore.getInstance().batch()
+
+                // Agregar todas las eliminaciones de inscripciones en un lote
+                for (documento in querySnapshot.documents) {
+                    batch.delete(documento.reference)
+                }
+
+                // Ejecutar el lote de eliminaciones
+                batch.commit()
+                    .addOnSuccessListener {
+                        // Ahora eliminar la materia
+                        AdministradorFirebase.eliminarMateria(idMateria)
+                            .addOnSuccessListener {
+                                _eliminacionExitosa.value = true
+                                _cargando.value = false
+                            }
+                            .addOnFailureListener { e ->
+                                _error.value = "Error al eliminar materia: ${e.message}"
+                                _cargando.value = false
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        _error.value = "Error al eliminar inscripciones: ${e.message}"
+                        _cargando.value = false
+                    }
+            }
+            .addOnFailureListener { e ->
+                _error.value = "Error al obtener inscripciones: ${e.message}"
+                _cargando.value = false
+            }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // Limpiar listener al destruir el ViewModel
+        listenerEstudiantes?.remove()
     }
 }

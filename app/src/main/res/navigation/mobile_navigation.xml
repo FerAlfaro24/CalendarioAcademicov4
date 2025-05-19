@@ -9,7 +9,11 @@
         android:id="@+id/nav_home"
         android:name="com.unacar.calendarioacademico.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_materia_detalle"
+            app:destination="@id/nav_materia_detalle" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_calendario"
@@ -49,7 +53,11 @@
         android:id="@+id/nav_gestionar_estudiantes"
         android:name="com.unacar.calendarioacademico.ui.estudiantes.GestionarEstudiantesFragment"
         android:label="@string/menu_gestionar_estudiantes"
-        tools:layout="@layout/fragment_gestionar_estudiantes" />
+        tools:layout="@layout/fragment_gestionar_estudiantes">
+        <action
+            android:id="@+id/action_gestionarEstudiantes_to_detalleEstudiante"
+            app:destination="@id/nav_detalle_estudiante" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_materia_detalle"
@@ -65,6 +73,12 @@
         <action
             android:id="@+id/action_detalleMateria_to_eventosMateria"
             app:destination="@id/nav_eventos_materia" />
+        <action
+            android:id="@+id/action_detalleMateria_to_crearEvento"
+            app:destination="@id/nav_crear_evento" />
+        <action
+            android:id="@+id/action_detalleMateria_to_editarMateria"
+            app:destination="@id/nav_editar_materia" />
     </fragment>
 
     <fragment
@@ -78,10 +92,69 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_detalle_estudiante"
+        android:name="com.unacar.calendarioacademico.ui.estudiantes.DetalleEstudianteFragment"
+        android:label="@string/detalle_estudiante"
+        tools:layout="@layout/fragment_detalle_estudiante">
+        <argument
+            android:name="estudianteId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_detalleEstudiante_to_seleccionarMateria"
+            app:destination="@id/nav_seleccionar_materia" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_seleccionar_materia"
+        android:name="com.unacar.calendarioacademico.ui.estudiantes.SeleccionarMateriaFragment"
+        android:label="@string/seleccionar_materia"
+        tools:layout="@layout/fragment_seleccionar_materia">
+        <argument
+            android:name="estudianteId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_eventos_materia"
         android:name="com.unacar.calendarioacademico.ui.eventos.EventosMateriaFragment"
         android:label="@string/eventos_materia"
         tools:layout="@layout/fragment_eventos_materia">
+        <argument
+            android:name="materiaId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_eventosMateria_to_crearEvento"
+            app:destination="@id/nav_crear_evento" />
+        <action
+            android:id="@+id/action_eventosMateria_to_detalleEvento"
+            app:destination="@id/nav_detalle_evento" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_crear_evento"
+        android:name="com.unacar.calendarioacademico.ui.eventos.CrearEventoFragment"
+        android:label="@string/crear_evento"
+        tools:layout="@layout/fragment_crear_evento">
+        <argument
+            android:name="materiaId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_detalle_evento"
+        android:name="com.unacar.calendarioacademico.ui.eventos.DetalleEventoFragment"
+        android:label="@string/detalle_evento"
+        tools:layout="@layout/fragment_detalle_evento">
+        <argument
+            android:name="eventoId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_editar_materia"
+        android:name="com.unacar.calendarioacademico.ui.materias.EditarMateriaFragment"
+        android:label="@string/editar_materia"
+        tools:layout="@layout/fragment_editar_materia">
         <argument
             android:name="materiaId"
             app:argType="string" />

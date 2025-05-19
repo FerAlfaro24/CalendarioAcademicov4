@@ -1,10 +1,12 @@
 package com.unacar.calendarioacademico.ui.materias
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -92,6 +94,12 @@ class DetalleMateriaFragment : Fragment() {
                     val action = DetalleMateriaFragmentDirections.actionDetalleMateriaToAgregarEstudiantes(args.materiaId)
                     findNavController().navigate(action)
                 }
+
+                // Mostrar botón de opciones
+                binding.tvOpciones.visibility = View.VISIBLE
+                binding.tvOpciones.setOnClickListener {
+                    mostrarMenuOpciones(it)
+                }
             } else {
                 binding.btnAccion.text = getString(R.string.ver_eventos)
                 binding.btnAccion.setOnClickListener {
@@ -99,6 +107,17 @@ class DetalleMateriaFragment : Fragment() {
                     val action = DetalleMateriaFragmentDirections.actionDetalleMateriaToEventosMateria(args.materiaId)
                     findNavController().navigate(action)
                 }
+
+                // Ocultar botón de opciones para estudiantes
+                binding.tvOpciones.visibility = View.GONE
+            }
+        }
+
+        // Observar eliminación exitosa
+        viewModel.eliminacionExitosa.observe(viewLifecycleOwner) { exitosa ->
+            if (exitosa) {
+                Toast.makeText(context, "Materia eliminada correctamente", Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
             }
         }
 
@@ -109,6 +128,39 @@ class DetalleMateriaFragment : Fragment() {
         // Mostrar diálogo de confirmación
         // Por ahora, solo eliminamos directamente
         viewModel.eliminarEstudiante(estudiante.id, args.materiaId)
+    }
+
+    private fun mostrarMenuOpciones(view: View) {
+        val popupMenu = PopupMenu(requireContext(), view)
+        popupMenu.menuInflater.inflate(R.menu.menu_materia, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_editar_materia -> {
+                    val action = DetalleMateriaFragmentDirections.actionDetalleMateriaToEditarMateria(args.materiaId)
+                    findNavController().navigate(action)
+                    true
+                }
+                R.id.action_eliminar_materia -> {
+                    mostrarDialogoConfirmacion()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+    }
+
+    private fun mostrarDialogoConfirmacion() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Eliminar materia")
+            .setMessage("¿Estás seguro de que deseas eliminar esta materia? Esta acción no se puede deshacer y se eliminarán todas las inscripciones de estudiantes.")
+            .setPositiveButton("Eliminar") { _, _ ->
+                viewModel.eliminarMateria(args.materiaId)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     override fun onDestroyView() {

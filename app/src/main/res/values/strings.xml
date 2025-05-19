@@ -92,4 +92,20 @@
     <string name="agregar">Agregar</string>
     <string name="no_hay_estudiantes_para_agregar">No hay estudiantes disponibles para agregar</string>
     <string name="eventos_materia">Eventos de la materia</string>
+
+    <!-- Gestión de estudiantes -->
+    <string name="no_hay_estudiantes_para_mostrar">No hay estudiantes para mostrar</string>
+    <string name="ver_detalles">Ver detalles</string>
+    <string name="materias_inscrito">Materias en las que está inscrito</string>
+    <string name="no_esta_inscrito_en_materias">El estudiante no está inscrito en ninguna materia</string>
+    <string name="inscribir_en_materia">Inscribir en materia</string>
+    <string name="desinscribir">Desinscribir</string>
+    <string name="no_hay_materias_disponibles">No hay materias disponibles para inscripción</string>
+    <string name="inscribir">Inscribir</string>
+    <string name="detalle_estudiante">Detalle del estudiante</string>
+
+    <string name="detalle_evento">Detalle del evento</string>
+    <string name="editar_materia">Editar materia</string>
+    <string name="guardar_cambios">Guardar cambios</string>
+    <string name="eliminar_materia">Eliminar materia</string>
 </resources>

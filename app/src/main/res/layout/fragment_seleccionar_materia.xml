@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.estudiantes.GestionarEstudiantesFragment">
+    tools:context=".ui.estudiantes.SeleccionarMateriaFragment">
 
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/menu_gestionar_estudiantes"
+        android:text="@string/seleccionar_materia"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -19,55 +19,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilBuscarEstudiante"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tvNombreEstudiante"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:hint="@string/buscar_estudiante"
-        app:layout_constraintEnd_toStartOf="@+id/btnBuscar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitulo">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etBuscarEstudiante"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/btnBuscar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/buscar"
-        app:layout_constraintBottom_toBottomOf="@+id/tilBuscarEstudiante"
+        android:layout_marginTop="8dp"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tilBuscarEstudiante" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo"
+        tools:text="Inscribir a: Nombre del Estudiante" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreEstudiante" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEstudiantes"
+        android:id="@+id/rvMaterias"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilBuscarEstudiante"
-        tools:listitem="@layout/item_estudiante_gestion" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:listitem="@layout/item_materia_seleccion" />
 
     <TextView
-        android:id="@+id/tvNoEstudiantes"
+        android:id="@+id/tvNoMaterias"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/no_hay_estudiantes_para_mostrar"
+        android:layout_marginTop="64dp"
+        android:text="@string/no_hay_materias_disponibles"
         android:textAlignment="center"
         android:textStyle="italic"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tilBuscarEstudiante" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <ProgressBar
         android:id="@+id/progressBar"

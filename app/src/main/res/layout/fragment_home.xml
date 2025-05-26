@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
-                tools:listitem="@layout/item_evento_simple"
+                tools:listitem="@layout/item_evento"
                 tools:visibility="visible" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

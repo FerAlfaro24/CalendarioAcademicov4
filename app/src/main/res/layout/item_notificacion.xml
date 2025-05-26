@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    android:background="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,9 +28,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/btnEliminarNotificacion"
             app:layout_constraintStart_toEndOf="@+id/ivIconoTipo"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Nuevo Examen" />
@@ -40,8 +43,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/btnEliminarNotificacion"
             app:layout_constraintStart_toEndOf="@+id/ivIconoTipo"
             app:layout_constraintTop_toBottomOf="@+id/tvTituloNotificacion"
             tools:text="Se ha creado un nuevo examen para la materia de Análisis y Diseño de Sistemas" />
@@ -52,18 +57,32 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:textSize="12sp"
             android:textStyle="italic"
-            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            android:textColor="@color/color_texto_secundario"
+            app:layout_constraintEnd_toStartOf="@+id/btnEliminarNotificacion"
             app:layout_constraintStart_toEndOf="@+id/ivIconoTipo"
             app:layout_constraintTop_toBottomOf="@+id/tvMensajeNotificacion"
             tools:text="25/05/2025 10:30" />
+
+        <ImageButton
+            android:id="@+id/btnEliminarNotificacion"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Eliminar notificación"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="@color/color_texto_secundario"
+            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/indicadorNoLeida"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:background="@color/purple_500"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_indicador_circular"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

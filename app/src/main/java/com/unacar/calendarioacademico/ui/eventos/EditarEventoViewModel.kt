@@ -3,12 +3,11 @@ package com.unacar.calendarioacademico.ui.eventos
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.unacar.calendarioacademico.modelos.Evento
 import com.unacar.calendarioacademico.modelos.Materia
 import com.unacar.calendarioacademico.utilidades.AdministradorFirebase
 
-class DetalleEventoViewModel : ViewModel() {
+class EditarEventoViewModel : ViewModel() {
 
     private val _evento = MutableLiveData<Evento>()
     val evento: LiveData<Evento> = _evento
@@ -16,8 +15,8 @@ class DetalleEventoViewModel : ViewModel() {
     private val _materia = MutableLiveData<Materia>()
     val materia: LiveData<Materia> = _materia
 
-    private val _esProfesor = MutableLiveData<Boolean>()
-    val esProfesor: LiveData<Boolean> = _esProfesor
+    private val _eventoActualizado = MutableLiveData<Boolean>()
+    val eventoActualizado: LiveData<Boolean> = _eventoActualizado
 
     private val _cargando = MutableLiveData<Boolean>()
     val cargando: LiveData<Boolean> = _cargando
@@ -25,30 +24,7 @@ class DetalleEventoViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _eventoEliminado = MutableLiveData<Boolean>()
-    val eventoEliminado: LiveData<Boolean> = _eventoEliminado
-
-    init {
-        verificarTipoUsuario()
-    }
-
-    private fun verificarTipoUsuario() {
-        val usuario = FirebaseAuth.getInstance().currentUser
-        if (usuario != null) {
-            AdministradorFirebase.obtenerPerfilUsuario(usuario.uid).get()
-                .addOnSuccessListener { documento ->
-                    if (documento.exists()) {
-                        val tipoUsuario = documento.getString("tipoUsuario") ?: "estudiante"
-                        _esProfesor.value = tipoUsuario == "profesor"
-                    }
-                }
-                .addOnFailureListener {
-                    _error.value = "Error al verificar tipo de usuario: ${it.message}"
-                }
-        }
-    }
-
-    fun cargarDetalleEvento(idEvento: String) {
+    fun cargarEvento(idEvento: String) {
         _cargando.value = true
 
         AdministradorFirebase.obtenerEvento(idEvento).get()
@@ -94,16 +70,25 @@ class DetalleEventoViewModel : ViewModel() {
             }
     }
 
-    fun eliminarEvento(idEvento: String) {
+    fun actualizarEvento(idEvento: String, titulo: String, descripcion: String, fecha: Long, hora: String, tipo: String) {
         _cargando.value = true
 
-        AdministradorFirebase.eliminarEvento(idEvento)
+        val datos = mapOf(
+            "titulo" to titulo,
+            "descripcion" to descripcion,
+            "fecha" to fecha,
+            "hora" to hora,
+            "tipo" to tipo,
+            "fechaActualizacion" to System.currentTimeMillis()
+        )
+
+        AdministradorFirebase.actualizarEvento(idEvento, datos)
             .addOnSuccessListener {
-                _eventoEliminado.value = true
+                _eventoActualizado.value = true
                 _cargando.value = false
             }
             .addOnFailureListener { e ->
-                _error.value = "Error al eliminar evento: ${e.message}"
+                _error.value = "Error al actualizar evento: ${e.message}"
                 _cargando.value = false
             }
     }

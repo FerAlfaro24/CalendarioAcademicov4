@@ -79,13 +79,15 @@ class TodosEventosFragment : Fragment() {
             nombresMateria,
             onEventoClick = { evento ->
                 // Navegar al detalle del evento
-                // TODO: Implementar navegación cuando esté listo el DetalleEventoFragment
-                Toast.makeText(context, "Ver evento: ${evento.titulo}", Toast.LENGTH_SHORT).show()
+                val bundle = Bundle()
+                bundle.putString("eventoId", evento.id)
+                findNavController().navigate(R.id.action_todos_eventos_to_detalle_evento, bundle)
             },
             onEditarEvento = { evento ->
                 // Navegar a editar evento
-                // TODO: Implementar navegación cuando esté listo el EditarEventoFragment
-                Toast.makeText(context, "Editar evento: ${evento.titulo}", Toast.LENGTH_SHORT).show()
+                val bundle = Bundle()
+                bundle.putString("eventoId", evento.id)
+                findNavController().navigate(R.id.nav_editar_evento, bundle)
             },
             onEliminarEvento = { evento ->
                 mostrarDialogoEliminar(evento)

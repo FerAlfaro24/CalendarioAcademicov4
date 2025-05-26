@@ -1,5 +1,6 @@
 package com.unacar.calendarioacademico
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.unacar.calendarioacademico.autenticacion.IniciarSesionActivity
 import com.unacar.calendarioacademico.databinding.ActivityMainBinding
+import com.unacar.calendarioacademico.modelos.Materia
 import com.unacar.calendarioacademico.utilidades.AdministradorFirebase
 
 class MainActivity : AppCompatActivity() {
@@ -48,19 +50,12 @@ class MainActivity : AppCompatActivity() {
         // Configurar el botón flotante según el tipo de usuario
         binding.appBarMain.fab.setOnClickListener { view ->
             if (tipoUsuario == "profesor") {
-                // Si es profesor, puede crear eventos
-                Snackbar.make(view, "Crear nuevo evento", Snackbar.LENGTH_LONG)
-                    .setAction("Crear") {
-                        // Aquí iría la navegación a la pantalla de creación de eventos
-                        // Por ahora mostramos un mensaje
-                        Toast.makeText(this, "Funcionalidad de crear evento pendiente", Toast.LENGTH_SHORT).show()
-                    }.show()
+                // Para profesores: mostrar selector de materias para crear evento
+                mostrarSelectorMaterias(view)
             } else {
                 // Si es estudiante, puede filtrar su calendario
                 Snackbar.make(view, "Filtrar calendario", Snackbar.LENGTH_LONG)
                     .setAction("Filtrar") {
-                        // Aquí iría el diálogo de filtros
-                        // Por ahora mostramos un mensaje
                         Toast.makeText(this, "Funcionalidad de filtrado pendiente", Toast.LENGTH_SHORT).show()
                     }.show()
             }
@@ -104,6 +99,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun mostrarSelectorMaterias(view: View) {
+        val usuario = AdministradorFirebase.obtenerUsuarioActual()
+        if (usuario != null) {
+            AdministradorFirebase.obtenerMateriasPorProfesor(usuario.uid)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty) {
+                        Snackbar.make(view, "Primero debes crear una materia", Snackbar.LENGTH_LONG)
+                            .setAction("Crear") {
+                                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_crear_materia)
+                            }.show()
+                    } else {
+                        // Crear lista de materias
+                        val materias = mutableListOf<Materia>()
+                        val nombresMaterias = mutableListOf<String>()
+
+                        for (documento in querySnapshot.documents) {
+                            val materia = documento.toObject(Materia::class.java)
+                            if (materia != null) {
+                                materia.id = documento.id
+                                materias.add(materia)
+                                nombresMaterias.add(materia.nombre)
+                            }
+                        }
+
+                        // Mostrar diálogo de selección
+                        AlertDialog.Builder(this)
+                            .setTitle("Selecciona la materia")
+                            .setItems(nombresMaterias.toTypedArray()) { _, which ->
+                                val materiaSeleccionada = materias[which]
+                                val bundle = Bundle()
+                                bundle.putString("materiaId", materiaSeleccionada.id)
+                                findNavController(R.id.nav_host_fragment_content_main)
+                                    .navigate(R.id.nav_crear_evento, bundle)
+                            }
+                            .setNegativeButton("Cancelar", null)
+                            .show()
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Error al cargar materias", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
     private fun configurarMenuSegunUsuario(navView: NavigationView, tipoUsuario: String) {
         val menu = navView.menu
 
@@ -119,6 +159,8 @@ class MainActivity : AppCompatActivity() {
 
             // Mostrar el botón flotante para profesores
             binding.appBarMain.fab.visibility = View.VISIBLE
+            // Cambiar icono del FAB para profesores
+            binding.appBarMain.fab.setImageResource(android.R.drawable.ic_input_add)
         } else {
             Log.d(TAG, "Configurando menú para estudiante")
             // Para estudiantes: mantener notificaciones, quitar eventos
@@ -157,9 +199,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> {
                     // Permitir navegación normal para otros elementos
-                    navController.navigate(menuItem.itemId)
-                    drawerLayout.closeDrawers()
-                    true
+                    try {
+                        navController.navigate(menuItem.itemId)
+                        drawerLayout.closeDrawers()
+                        true
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error al navegar: ${e.message}")
+                        false
+                    }
                 }
             }
         }

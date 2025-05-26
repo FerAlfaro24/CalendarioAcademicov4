@@ -64,7 +64,7 @@ class CrearEventoViewModel : ViewModel() {
                         val notificacion = Notificacion(
                             id = "", // Se asignará automáticamente
                             mensaje = mensaje,
-                            titulo = tituloEvento,
+                            titulo = "Nuevo $tipoEvento",
                             tipo = tipoEvento.lowercase(),
                             idUsuario = idEstudiante,
                             idEvento = idEvento,
@@ -74,6 +74,12 @@ class CrearEventoViewModel : ViewModel() {
                         )
 
                         AdministradorFirebase.crearNotificacion(notificacion)
+                            .addOnSuccessListener {
+                                // Notificación creada exitosamente
+                            }
+                            .addOnFailureListener {
+                                // Error al crear notificación, pero no es crítico
+                            }
                     }
                 }
             }

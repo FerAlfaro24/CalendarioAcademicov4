@@ -16,6 +16,7 @@
     <color name="color_dia_libre">#4CAF50</color> <!-- Verde -->
 
     <!-- Colores para notificaciones -->
-    <color name="color_notificacion_no_leida">#E8F5E8</color> <!-- Verde claro -->
+    <color name="color_notificacion_no_leida">#F8F9FA</color> <!-- Gris muy claro -->
     <color name="color_texto_secundario">#757575</color> <!-- Gris -->
+    <color name="color_texto_principal">#212121</color> <!-- Negro casi puro -->
 </resources>

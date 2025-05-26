@@ -54,34 +54,16 @@ object AdministradorFirebase {
         return coleccionUsuarios.document(idUsuario)
     }
 
-    // Función para crear un documento de prueba (verificar conexión)
-    fun probarConexion(callback: (Boolean, String) -> Unit) {
-        val coleccionPrueba = db.collection("prueba")
-        val documentoPrueba = HashMap<String, Any>()
-        documentoPrueba["prueba"] = "Conexión exitosa"
-
-        coleccionPrueba.add(documentoPrueba)
-            .addOnSuccessListener {
-                callback(true, "Conexión con Firebase establecida correctamente")
-            }
-            .addOnFailureListener { e ->
-                callback(false, "Error al conectar con Firebase: ${e.message}")
-            }
-    }
-
     // ---- FUNCIONES PARA MATERIAS ----
 
-    // Crear una nueva materia
     fun crearMateria(materia: Materia): Task<DocumentReference> {
         return coleccionMaterias.add(materia)
     }
 
-    // Obtener materias de un profesor
     fun obtenerMateriasPorProfesor(idProfesor: String): Query {
         return coleccionMaterias.whereEqualTo("idProfesor", idProfesor)
     }
 
-    // Escuchar materias de un profesor en tiempo real
     fun escucharMateriasPorProfesor(idProfesor: String, listener: (List<Materia>) -> Unit): ListenerRegistration {
         return coleccionMaterias
             .whereEqualTo("idProfesor", idProfesor)
@@ -105,22 +87,18 @@ object AdministradorFirebase {
             }
     }
 
-    // Obtener detalles de una materia
     fun obtenerMateria(idMateria: String): DocumentReference {
         return coleccionMaterias.document(idMateria)
     }
 
-    // Actualizar una materia
     fun actualizarMateria(idMateria: String, datos: Map<String, Any>): Task<Void> {
         return coleccionMaterias.document(idMateria).update(datos)
     }
 
-    // Eliminar una materia
     fun eliminarMateria(idMateria: String): Task<Void> {
         return coleccionMaterias.document(idMateria).delete()
     }
 
-    // Eliminar todas las inscripciones de una materia
     fun eliminarInscripcionesMateria(idMateria: String): Task<QuerySnapshot> {
         return coleccionInscripciones
             .whereEqualTo("idMateria", idMateria)
@@ -129,17 +107,14 @@ object AdministradorFirebase {
 
     // ---- FUNCIONES PARA EVENTOS ----
 
-    // Crear un nuevo evento
     fun crearEvento(evento: Evento): Task<DocumentReference> {
         return coleccionEventos.add(evento)
     }
 
-    // Obtener eventos de una materia
     fun obtenerEventosPorMateria(idMateria: String): Query {
         return coleccionEventos.whereEqualTo("idMateria", idMateria)
     }
 
-    // Escuchar eventos de una materia en tiempo real
     fun escucharEventosPorMateria(idMateria: String, listener: (List<Evento>) -> Unit): ListenerRegistration {
         return coleccionEventos
             .whereEqualTo("idMateria", idMateria)
@@ -164,7 +139,6 @@ object AdministradorFirebase {
             }
     }
 
-    // Obtener próximos eventos para estudiantes
     fun obtenerProximosEventos(idsMateriasInscritas: List<String>, limite: Int = 4): Query {
         val fechaActual = System.currentTimeMillis()
         return coleccionEventos
@@ -174,24 +148,20 @@ object AdministradorFirebase {
             .limit(limite.toLong())
     }
 
-    // Actualizar un evento
     fun actualizarEvento(idEvento: String, datos: Map<String, Any>): Task<Void> {
         return coleccionEventos.document(idEvento).update(datos)
     }
 
-    // Eliminar un evento
     fun eliminarEvento(idEvento: String): Task<Void> {
         return coleccionEventos.document(idEvento).delete()
     }
 
-    // Obtener un evento específico
     fun obtenerEvento(idEvento: String): DocumentReference {
         return coleccionEventos.document(idEvento)
     }
 
     // ---- FUNCIONES PARA INSCRIPCIONES ----
 
-    // Inscribir un estudiante a una materia
     fun inscribirEstudiante(idEstudiante: String, idMateria: String): Task<Void> {
         val inscripcion = hashMapOf(
             "idEstudiante" to idEstudiante,
@@ -201,12 +171,10 @@ object AdministradorFirebase {
         return coleccionInscripciones.document("$idEstudiante-$idMateria").set(inscripcion)
     }
 
-    // Obtener las materias en las que está inscrito un estudiante
     fun obtenerMateriasEstudiante(idEstudiante: String): Query {
         return coleccionInscripciones.whereEqualTo("idEstudiante", idEstudiante)
     }
 
-    // Escuchar las inscripciones de un estudiante en tiempo real
     fun escucharMateriasEstudiante(idEstudiante: String, listener: (List<String>) -> Unit): ListenerRegistration {
         return coleccionInscripciones
             .whereEqualTo("idEstudiante", idEstudiante)
@@ -229,12 +197,10 @@ object AdministradorFirebase {
             }
     }
 
-    // Obtener estudiantes inscritos en una materia
     fun obtenerEstudiantesMateria(idMateria: String): Query {
         return coleccionInscripciones.whereEqualTo("idMateria", idMateria)
     }
 
-    // Escuchar los estudiantes inscritos en una materia en tiempo real
     fun escucharEstudiantesMateria(idMateria: String, listener: (List<String>) -> Unit): ListenerRegistration {
         return coleccionInscripciones
             .whereEqualTo("idMateria", idMateria)
@@ -257,25 +223,21 @@ object AdministradorFirebase {
             }
     }
 
-    // Eliminar inscripción de un estudiante en una materia
     fun eliminarInscripcion(idEstudiante: String, idMateria: String): Task<Void> {
         return coleccionInscripciones.document("$idEstudiante-$idMateria").delete()
     }
 
     // ---- FUNCIONES PARA NOTIFICACIONES ----
 
-    // Crear una notificación
     fun crearNotificacion(notificacion: Notificacion): Task<DocumentReference> {
         return coleccionNotificaciones.add(notificacion)
     }
 
-    // Obtener notificaciones de un usuario
     fun obtenerNotificacionesUsuario(idUsuario: String): Query {
         return coleccionNotificaciones.whereEqualTo("idUsuario", idUsuario)
             .orderBy("fechaCreacion", Query.Direction.DESCENDING)
     }
 
-    // Escuchar notificaciones de un usuario en tiempo real
     fun escucharNotificacionesUsuario(idUsuario: String, listener: (List<Notificacion>) -> Unit): ListenerRegistration {
         return coleccionNotificaciones
             .whereEqualTo("idUsuario", idUsuario)
@@ -290,7 +252,9 @@ object AdministradorFirebase {
                     for (documento in querySnapshot.documents) {
                         val notificacion = documento.toObject(Notificacion::class.java)
                         if (notificacion != null) {
-                            listaNotificaciones.add(notificacion)
+                            // Crear una nueva instancia con el ID del documento
+                            val notificacionConId = notificacion.copy(id = documento.id)
+                            listaNotificaciones.add(notificacionConId)
                         }
                     }
                 }
@@ -299,7 +263,6 @@ object AdministradorFirebase {
             }
     }
 
-    // Marcar notificación como leída
     fun marcarNotificacionLeida(idNotificacion: String): Task<Void> {
         return coleccionNotificaciones.document(idNotificacion)
             .update(mapOf(
@@ -308,7 +271,6 @@ object AdministradorFirebase {
             ))
     }
 
-    // Crear notificación para estudiantes de una materia
     fun crearNotificacionParaMateria(idMateria: String, titulo: String, mensaje: String, tipo: String, idEvento: String = "") {
         // Obtener estudiantes inscritos en la materia
         coleccionInscripciones
@@ -338,13 +300,11 @@ object AdministradorFirebase {
 
     // ---- FUNCIONES PARA GESTIÓN DE ESTUDIANTES ----
 
-    // Obtener todos los estudiantes
     fun obtenerTodosLosEstudiantes(): Query {
         return coleccionUsuarios
             .whereEqualTo("tipoUsuario", "estudiante")
     }
 
-    // Escuchar todos los estudiantes en tiempo real
     fun escucharTodosLosEstudiantes(listener: (List<Usuario>) -> Unit): ListenerRegistration {
         return coleccionUsuarios
             .whereEqualTo("tipoUsuario", "estudiante")
@@ -368,10 +328,24 @@ object AdministradorFirebase {
             }
     }
 
-    // Buscar estudiante por correo
     fun buscarEstudiantePorCorreo(correo: String): Query {
         return coleccionUsuarios
             .whereEqualTo("tipoUsuario", "estudiante")
             .whereEqualTo("correo", correo)
+    }
+
+    // Función para crear un documento de prueba (verificar conexión)
+    fun probarConexion(callback: (Boolean, String) -> Unit) {
+        val coleccionPrueba = db.collection("prueba")
+        val documentoPrueba = HashMap<String, Any>()
+        documentoPrueba["prueba"] = "Conexión exitosa"
+
+        coleccionPrueba.add(documentoPrueba)
+            .addOnSuccessListener {
+                callback(true, "Conexión con Firebase establecida correctamente")
+            }
+            .addOnFailureListener { e ->
+                callback(false, "Error al conectar con Firebase: ${e.message}")
+            }
     }
 }

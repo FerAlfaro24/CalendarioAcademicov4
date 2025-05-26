@@ -1,5 +1,6 @@
 package com.unacar.calendarioacademico.ui.notificaciones
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unacar.calendarioacademico.databinding.FragmentNotificacionesBinding
 
@@ -37,12 +39,34 @@ class NotificacionesFragment : Fragment() {
                 binding.tvNoNotificaciones.visibility = View.GONE
                 binding.rvNotificaciones.visibility = View.VISIBLE
 
-                binding.rvNotificaciones.adapter = NotificacionAdapter(notificaciones) { notificacion ->
-                    // Marcar como leída si no está leída
-                    if (!notificacion.leida) {
-                        viewModel.marcarComoLeida(notificacion.id)
+                binding.rvNotificaciones.adapter = NotificacionAdapter(
+                    notificaciones,
+                    onNotificacionClick = { notificacion ->
+                        // Marcar como leída si no está leída
+                        if (!notificacion.leida) {
+                            viewModel.marcarComoLeida(notificacion.id)
+                        }
+
+                        // Navegar al evento relacionado si existe
+                        if (notificacion.idEvento.isNotEmpty()) {
+                            try {
+                                val bundle = Bundle()
+                                bundle.putString("eventoId", notificacion.idEvento)
+                                findNavController().navigate(
+                                    com.unacar.calendarioacademico.R.id.action_notificaciones_to_detalle_evento,
+                                    bundle
+                                )
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Error al navegar al evento", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(context, "Notificación sin evento asociado", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onEliminarNotificacion = { notificacion ->
+                        mostrarDialogoEliminar(notificacion)
                     }
-                }
+                )
             }
         }
 
@@ -56,12 +80,24 @@ class NotificacionesFragment : Fragment() {
             }
         }
 
-        // Configurar botón para marcar todas como leídas
-        binding.btnMarcarTodasLeidas.setOnClickListener {
-            viewModel.marcarTodasComoLeidas()
+        viewModel.notificacionEliminada.observe(viewLifecycleOwner) { eliminada ->
+            if (eliminada) {
+                Toast.makeText(context, "Notificación eliminada", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return binding.root
+    }
+
+    private fun mostrarDialogoEliminar(notificacion: com.unacar.calendarioacademico.modelos.Notificacion) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Eliminar notificación")
+            .setMessage("¿Estás seguro de que deseas eliminar esta notificación?")
+            .setPositiveButton("Eliminar") { _, _ ->
+                viewModel.eliminarNotificacion(notificacion.id)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     override fun onDestroyView() {

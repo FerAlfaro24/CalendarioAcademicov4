@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_home_to_materia_detalle"
             app:destination="@id/nav_materia_detalle" />
+        <action
+            android:id="@+id/action_home_to_detalle_evento"
+            app:destination="@id/nav_detalle_evento" />
     </fragment>
 
     <fragment
@@ -35,14 +38,25 @@
         android:id="@+id/nav_notificaciones"
         android:name="com.unacar.calendarioacademico.ui.notificaciones.NotificacionesFragment"
         android:label="@string/menu_notificaciones"
-        tools:layout="@layout/fragment_notificaciones" />
+        tools:layout="@layout/fragment_notificaciones">
+        <action
+            android:id="@+id/action_notificaciones_to_detalle_evento"
+            app:destination="@id/nav_detalle_evento" />
+        <action
+            android:id="@+id/action_notificaciones_to_eventos_materia"
+            app:destination="@id/nav_eventos_materia" />
+    </fragment>
 
-    <!-- Nuevo: Todos los eventos para profesores -->
+    <!-- Todos los eventos para profesores -->
     <fragment
         android:id="@+id/nav_todos_eventos"
         android:name="com.unacar.calendarioacademico.ui.eventos.TodosEventosFragment"
         android:label="@string/todos_mis_eventos"
-        tools:layout="@layout/fragment_todos_eventos" />
+        tools:layout="@layout/fragment_todos_eventos">
+        <action
+            android:id="@+id/action_todos_eventos_to_detalle_evento"
+            app:destination="@id/nav_detalle_evento" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_perfil"
@@ -86,10 +100,6 @@
         <action
             android:id="@+id/action_detalleMateria_to_editarMateria"
             app:destination="@id/nav_editar_materia" />
-        <!-- Nueva acción: ir directamente a eventos -->
-        <action
-            android:id="@+id/action_detalleMateria_to_todosEventos"
-            app:destination="@id/nav_todos_eventos" />
     </fragment>
 
     <fragment
@@ -159,6 +169,9 @@
         <argument
             android:name="eventoId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_detalle_evento_to_editar_evento"
+            app:destination="@id/nav_editar_evento" />
     </fragment>
 
     <fragment
@@ -168,6 +181,17 @@
         tools:layout="@layout/fragment_editar_materia">
         <argument
             android:name="materiaId"
+            app:argType="string" />
+    </fragment>
+
+    <!-- Nuevo: Editar evento -->
+    <fragment
+        android:id="@+id/nav_editar_evento"
+        android:name="com.unacar.calendarioacademico.ui.eventos.EditarEventoFragment"
+        android:label="@string/editar_evento"
+        tools:layout="@layout/fragment_editar_evento">
+        <argument
+            android:name="eventoId"
             app:argType="string" />
     </fragment>
 </navigation>

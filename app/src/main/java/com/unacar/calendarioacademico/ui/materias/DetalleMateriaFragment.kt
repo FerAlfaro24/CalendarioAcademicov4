@@ -125,17 +125,29 @@ class DetalleMateriaFragment : Fragment() {
     }
 
     private fun eliminarEstudiante(estudiante: Usuario) {
-        // Mostrar diálogo de confirmación
-        // Por ahora, solo eliminamos directamente
-        viewModel.eliminarEstudiante(estudiante.id, args.materiaId)
+        // Mostrar diálogo de confirmación antes de eliminar
+        AlertDialog.Builder(requireContext())
+            .setTitle("Eliminar estudiante")
+            .setMessage("¿Estás seguro de que deseas eliminar a ${estudiante.nombre} de esta materia?")
+            .setPositiveButton("Eliminar") { _, _ ->
+                viewModel.eliminarEstudiante(estudiante.id, args.materiaId)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     private fun mostrarMenuOpciones(view: View) {
         val popupMenu = PopupMenu(requireContext(), view)
-        popupMenu.menuInflater.inflate(R.menu.menu_materia, popupMenu.menu)
+        popupMenu.menuInflater.inflate(R.menu.menu_materia_profesor, popupMenu.menu)
 
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                R.id.action_ver_eventos -> {
+                    // Nueva opción: ir a eventos de esta materia
+                    val action = DetalleMateriaFragmentDirections.actionDetalleMateriaToEventosMateria(args.materiaId)
+                    findNavController().navigate(action)
+                    true
+                }
                 R.id.action_editar_materia -> {
                     val action = DetalleMateriaFragmentDirections.actionDetalleMateriaToEditarMateria(args.materiaId)
                     findNavController().navigate(action)
@@ -155,7 +167,7 @@ class DetalleMateriaFragment : Fragment() {
     private fun mostrarDialogoConfirmacion() {
         AlertDialog.Builder(requireContext())
             .setTitle("Eliminar materia")
-            .setMessage("¿Estás seguro de que deseas eliminar esta materia? Esta acción no se puede deshacer y se eliminarán todas las inscripciones de estudiantes.")
+            .setMessage("¿Estás seguro de que deseas eliminar esta materia? Esta acción no se puede deshacer y se eliminarán todas las inscripciones de estudiantes y eventos asociados.")
             .setPositiveButton("Eliminar") { _, _ ->
                 viewModel.eliminarMateria(args.materiaId)
             }

@@ -5,59 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.notificaciones.NotificacionesFragment">
+    tools:context=".ui.eventos.TodosEventosFragment">
 
     <TextView
-        android:id="@+id/tvTituloNotificaciones"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvTitulo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Notificaciones"
+        android:text="@string/todos_mis_eventos"
+        android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnMarcarTodasLeidas"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Marcar todas como leídas"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTituloNotificaciones" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvNotificaciones"
+        android:id="@+id/rvEventos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        tools:listitem="@layout/item_notificacion" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo"
+        tools:listitem="@layout/item_evento_profesor" />
 
     <TextView
-        android:id="@+id/tvNoNotificaciones"
+        android:id="@+id/tvNoEventos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="No tienes notificaciones"
+        android:text="@string/no_has_creado_eventos"
         android:textAlignment="center"
         android:textStyle="italic"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
 
     <ProgressBar
         android:id="@+id/progressBar"

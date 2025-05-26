@@ -70,15 +70,6 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        // Configurar la navegación y el menú lateral
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_calendario, R.id.nav_materias, R.id.nav_notificaciones, R.id.nav_perfil
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-
         // Personalizar información del usuario en el menú
         if (usuario != null) {
             Log.d(TAG, "Obteniendo datos de usuario con UID: ${usuario.uid}")
@@ -95,24 +86,10 @@ class MainActivity : AppCompatActivity() {
                         tvEmail.text = usuario.email
 
                         // Configurar menú según tipo de usuario
-                        val menu = navView.menu
-                        if (tipoUsuario == "profesor") {
-                            Log.d(TAG, "Usuario es profesor")
-                            // Mostrar opciones específicas para profesores
-                            menu.findItem(R.id.nav_crear_materia)?.isVisible = true
-                            menu.findItem(R.id.nav_gestionar_estudiantes)?.isVisible = true
+                        configurarMenuSegunUsuario(navView, tipoUsuario ?: "estudiante")
 
-                            // Mostrar el botón flotante para profesores
-                            binding.appBarMain.fab.visibility = View.VISIBLE
-                        } else {
-                            Log.d(TAG, "Usuario es estudiante")
-                            // Ocultar opciones específicas para profesores
-                            menu.findItem(R.id.nav_crear_materia)?.isVisible = false
-                            menu.findItem(R.id.nav_gestionar_estudiantes)?.isVisible = false
-
-                            // Ocular botón flotante para estudiantes o cambiarlo a filtro
-                            binding.appBarMain.fab.setImageResource(android.R.drawable.ic_menu_search)
-                        }
+                        // Configurar la navegación después de cargar el tipo de usuario
+                        configurarNavegacion(navController, drawerLayout, navView)
                     } else {
                         Log.w(TAG, "No se encontró el documento del usuario")
                         // Si no hay perfil, redirigir a login
@@ -124,6 +101,67 @@ class MainActivity : AppCompatActivity() {
                     Log.e(TAG, "Error al obtener perfil de usuario", e)
                     Toast.makeText(this, "Error al cargar perfil: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+        }
+    }
+
+    private fun configurarMenuSegunUsuario(navView: NavigationView, tipoUsuario: String) {
+        val menu = navView.menu
+
+        if (tipoUsuario == "profesor") {
+            Log.d(TAG, "Configurando menú para profesor")
+            // Para profesores: quitar notificaciones, agregar eventos
+            menu.findItem(R.id.nav_notificaciones)?.isVisible = false
+            menu.findItem(R.id.nav_eventos)?.isVisible = true
+
+            // Mostrar opciones específicas para profesores
+            menu.findItem(R.id.nav_crear_materia)?.isVisible = true
+            menu.findItem(R.id.nav_gestionar_estudiantes)?.isVisible = true
+
+            // Mostrar el botón flotante para profesores
+            binding.appBarMain.fab.visibility = View.VISIBLE
+        } else {
+            Log.d(TAG, "Configurando menú para estudiante")
+            // Para estudiantes: mantener notificaciones, quitar eventos
+            menu.findItem(R.id.nav_notificaciones)?.isVisible = true
+            menu.findItem(R.id.nav_eventos)?.isVisible = false
+
+            // Ocultar opciones específicas para profesores
+            menu.findItem(R.id.nav_crear_materia)?.isVisible = false
+            menu.findItem(R.id.nav_gestionar_estudiantes)?.isVisible = false
+
+            // Cambiar icono del botón flotante para estudiantes (filtro)
+            binding.appBarMain.fab.setImageResource(android.R.drawable.ic_menu_search)
+        }
+    }
+
+    private fun configurarNavegacion(navController: androidx.navigation.NavController, drawerLayout: DrawerLayout, navView: NavigationView) {
+        // Configurar la navegación y el menú lateral
+        val destinationsSet = if (tipoUsuario == "profesor") {
+            setOf(R.id.nav_home, R.id.nav_calendario, R.id.nav_materias, R.id.nav_eventos, R.id.nav_perfil)
+        } else {
+            setOf(R.id.nav_home, R.id.nav_calendario, R.id.nav_materias, R.id.nav_notificaciones, R.id.nav_perfil)
+        }
+
+        appBarConfiguration = AppBarConfiguration(destinationsSet, drawerLayout)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+
+        // Manejar clicks en el menú
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_eventos -> {
+                    // Navegar a todos los eventos del profesor
+                    navController.navigate(R.id.nav_todos_eventos)
+                    drawerLayout.closeDrawers()
+                    true
+                }
+                else -> {
+                    // Permitir navegación normal para otros elementos
+                    navController.navigate(menuItem.itemId)
+                    drawerLayout.closeDrawers()
+                    true
+                }
+            }
         }
     }
 

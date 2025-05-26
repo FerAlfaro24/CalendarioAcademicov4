@@ -26,7 +26,8 @@ object AdministradorFirebase {
     private val coleccionNotificaciones = db.collection("notificaciones")
     private val coleccionInscripciones = db.collection("inscripciones")
 
-    // Autenticación
+    // ---- FUNCIONES DE AUTENTICACIÓN ----
+
     fun registrarUsuario(correo: String, contrasena: String): Task<AuthResult> {
         return auth.createUserWithEmailAndPassword(correo, contrasena)
     }
@@ -43,7 +44,8 @@ object AdministradorFirebase {
         auth.signOut()
     }
 
-    // Operaciones de usuarios
+    // ---- FUNCIONES DE USUARIOS ----
+
     fun crearPerfilUsuario(usuario: Usuario): Task<Void> {
         return coleccionUsuarios.document(usuario.id).set(usuario)
     }
@@ -137,6 +139,41 @@ object AdministradorFirebase {
         return coleccionEventos.whereEqualTo("idMateria", idMateria)
     }
 
+    // Escuchar eventos de una materia en tiempo real
+    fun escucharEventosPorMateria(idMateria: String, listener: (List<Evento>) -> Unit): ListenerRegistration {
+        return coleccionEventos
+            .whereEqualTo("idMateria", idMateria)
+            .orderBy("fecha", Query.Direction.ASCENDING)
+            .addSnapshotListener { querySnapshot, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+
+                val listaEventos = mutableListOf<Evento>()
+                if (querySnapshot != null) {
+                    for (documento in querySnapshot.documents) {
+                        val evento = documento.toObject(Evento::class.java)
+                        if (evento != null) {
+                            evento.id = documento.id
+                            listaEventos.add(evento)
+                        }
+                    }
+                }
+
+                listener(listaEventos)
+            }
+    }
+
+    // Obtener próximos eventos para estudiantes
+    fun obtenerProximosEventos(idsMateriasInscritas: List<String>, limite: Int = 4): Query {
+        val fechaActual = System.currentTimeMillis()
+        return coleccionEventos
+            .whereIn("idMateria", idsMateriasInscritas)
+            .whereGreaterThanOrEqualTo("fecha", fechaActual)
+            .orderBy("fecha", Query.Direction.ASCENDING)
+            .limit(limite.toLong())
+    }
+
     // Actualizar un evento
     fun actualizarEvento(idEvento: String, datos: Map<String, Any>): Task<Void> {
         return coleccionEventos.document(idEvento).update(datos)
@@ -145,6 +182,11 @@ object AdministradorFirebase {
     // Eliminar un evento
     fun eliminarEvento(idEvento: String): Task<Void> {
         return coleccionEventos.document(idEvento).delete()
+    }
+
+    // Obtener un evento específico
+    fun obtenerEvento(idEvento: String): DocumentReference {
+        return coleccionEventos.document(idEvento)
     }
 
     // ---- FUNCIONES PARA INSCRIPCIONES ----
@@ -215,6 +257,11 @@ object AdministradorFirebase {
             }
     }
 
+    // Eliminar inscripción de un estudiante en una materia
+    fun eliminarInscripcion(idEstudiante: String, idMateria: String): Task<Void> {
+        return coleccionInscripciones.document("$idEstudiante-$idMateria").delete()
+    }
+
     // ---- FUNCIONES PARA NOTIFICACIONES ----
 
     // Crear una notificación
@@ -228,16 +275,68 @@ object AdministradorFirebase {
             .orderBy("fechaCreacion", Query.Direction.DESCENDING)
     }
 
+    // Escuchar notificaciones de un usuario en tiempo real
+    fun escucharNotificacionesUsuario(idUsuario: String, listener: (List<Notificacion>) -> Unit): ListenerRegistration {
+        return coleccionNotificaciones
+            .whereEqualTo("idUsuario", idUsuario)
+            .orderBy("fechaCreacion", Query.Direction.DESCENDING)
+            .addSnapshotListener { querySnapshot, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+
+                val listaNotificaciones = mutableListOf<Notificacion>()
+                if (querySnapshot != null) {
+                    for (documento in querySnapshot.documents) {
+                        val notificacion = documento.toObject(Notificacion::class.java)
+                        if (notificacion != null) {
+                            listaNotificaciones.add(notificacion)
+                        }
+                    }
+                }
+
+                listener(listaNotificaciones)
+            }
+    }
+
     // Marcar notificación como leída
     fun marcarNotificacionLeida(idNotificacion: String): Task<Void> {
         return coleccionNotificaciones.document(idNotificacion)
-            .update("estado", "leida")
+            .update(mapOf(
+                "estado" to "leida",
+                "leida" to true
+            ))
     }
 
-    // Eliminar inscripción de un estudiante en una materia
-    fun eliminarInscripcion(idEstudiante: String, idMateria: String): Task<Void> {
-        return coleccionInscripciones.document("$idEstudiante-$idMateria").delete()
+    // Crear notificación para estudiantes de una materia
+    fun crearNotificacionParaMateria(idMateria: String, titulo: String, mensaje: String, tipo: String, idEvento: String = "") {
+        // Obtener estudiantes inscritos en la materia
+        coleccionInscripciones
+            .whereEqualTo("idMateria", idMateria)
+            .get()
+            .addOnSuccessListener { inscripciones ->
+                for (documento in inscripciones.documents) {
+                    val idEstudiante = documento.getString("idEstudiante")
+                    if (idEstudiante != null) {
+                        val notificacion = Notificacion(
+                            id = "",
+                            mensaje = mensaje,
+                            titulo = titulo,
+                            tipo = tipo,
+                            idUsuario = idEstudiante,
+                            idEvento = idEvento,
+                            estado = "no_leida",
+                            leida = false,
+                            fechaCreacion = System.currentTimeMillis()
+                        )
+
+                        crearNotificacion(notificacion)
+                    }
+                }
+            }
     }
+
+    // ---- FUNCIONES PARA GESTIÓN DE ESTUDIANTES ----
 
     // Obtener todos los estudiantes
     fun obtenerTodosLosEstudiantes(): Query {

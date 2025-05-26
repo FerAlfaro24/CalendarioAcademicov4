@@ -24,6 +24,7 @@
     <string name="menu_calendario">Calendario</string>
     <string name="menu_materias">Materias</string>
     <string name="menu_notificaciones">Notificaciones</string>
+    <string name="menu_todos_eventos">Eventos</string>
     <string name="menu_opciones_adicionales">Opciones adicionales</string>
     <string name="menu_crear_materia">Crear materia</string>
     <string name="menu_gestionar_estudiantes">Gestionar estudiantes</string>
@@ -56,6 +57,8 @@
     <string name="examen">Examen</string>
     <string name="tarea">Tarea</string>
     <string name="proyecto">Proyecto</string>
+    <string name="exposicion">Exposición</string>
+    <string name="dia_libre">Día Libre</string>
     <string name="guardar">Guardar</string>
     <string name="cancelar">Cancelar</string>
     <string name="descripcion">Descripción</string>
@@ -104,8 +107,47 @@
     <string name="inscribir">Inscribir</string>
     <string name="detalle_estudiante">Detalle del estudiante</string>
 
+    <!-- Eventos -->
+    <string name="crear_nuevo_evento">Crear Nuevo Evento</string>
+    <string name="titulo_evento">Título del evento</string>
+    <string name="descripcion_evento">Descripción del evento</string>
+    <string name="fecha_evento">Fecha del evento</string>
+    <string name="hora_evento">Hora del evento</string>
+    <string name="seleccionar_fecha">Seleccionar fecha</string>
+    <string name="seleccionar_hora">Seleccionar hora</string>
+    <string name="no_hay_eventos_registrados">No hay eventos registrados para esta materia</string>
+    <string name="eventos_de_la_materia">Eventos de la materia</string>
+
+    <!-- Notificaciones -->
+    <string name="no_tienes_notificaciones">No tienes notificaciones</string>
+    <string name="marcar_todas_como_leidas">Marcar todas como leídas</string>
+    <string name="notificacion_evento_creado">Se ha creado un nuevo evento</string>
+    <string name="notificacion_evento_modificado">Se ha modificado un evento</string>
+    <string name="notificacion_evento_eliminado">Se ha eliminado un evento</string>
+
     <string name="detalle_evento">Detalle del evento</string>
+    <string name="editar_evento">Editar evento</string>
     <string name="editar_materia">Editar materia</string>
     <string name="guardar_cambios">Guardar cambios</string>
     <string name="eliminar_materia">Eliminar materia</string>
+
+    <!-- Agregar estos strings al archivo strings.xml existente -->
+
+    <!-- Eventos -->
+    <string name="menu_eventos">Eventos</string>
+    <string name="todos_mis_eventos">Todos mis eventos</string>
+    <string name="no_has_creado_eventos">No has creado ningún evento aún</string>
+
+    <!-- Próximos eventos -->
+    <string name="ver_todos_los_eventos">Ver todos los eventos</string>
+    <string name="evento_proximamente">Próximamente</string>
+
+    <!-- Notificaciones mejoradas -->
+    <string name="nuevas_notificaciones">Nuevas notificaciones</string>
+    <string name="ir_al_evento">Ir al evento</string>
+
+    <!-- Botones y acciones -->
+    <string name="ir_a_eventos">Ir a eventos</string>
+
+    
 </resources>

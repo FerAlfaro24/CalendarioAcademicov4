@@ -1,7 +1,7 @@
 package com.unacar.calendarioacademico.modelos
 
 data class Evento(
-    val id: String = "",
+    var id: String = "",
     val titulo: String = "",
     val descripcion: String = "",
     val fecha: Long = 0,  // timestamp
@@ -13,4 +13,14 @@ data class Evento(
 ) {
     // Constructor vacío para Firestore
     constructor() : this("", "", "", 0, "", "", "tarea", 0, 0)
+
+    // Método para obtener el tipo formateado
+    fun getTipoFormateado(): String {
+        return when (tipo.lowercase()) {
+            "examen" -> "Examen"
+            "tarea" -> "Tarea"
+            "proyecto" -> "Proyecto"
+            else -> "Evento"
+        }
+    }
 }

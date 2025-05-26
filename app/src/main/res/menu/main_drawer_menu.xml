@@ -16,10 +16,19 @@
             android:id="@+id/nav_materias"
             android:icon="@android:drawable/ic_menu_sort_by_size"
             android:title="@string/menu_materias" />
+
+        <!-- Para estudiantes -->
         <item
             android:id="@+id/nav_notificaciones"
             android:icon="@android:drawable/ic_popup_reminder"
             android:title="@string/menu_notificaciones" />
+
+        <!-- Para profesores -->
+        <item
+            android:id="@+id/nav_eventos"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="@string/menu_eventos"
+            android:visible="false" />
     </group>
 
     <item android:title="@string/menu_opciones_adicionales">
@@ -27,11 +36,13 @@
             <item
                 android:id="@+id/nav_crear_materia"
                 android:icon="@android:drawable/ic_menu_add"
-                android:title="@string/menu_crear_materia" />
+                android:title="@string/menu_crear_materia"
+                android:visible="false" />
             <item
                 android:id="@+id/nav_gestionar_estudiantes"
                 android:icon="@android:drawable/ic_menu_share"
-                android:title="@string/menu_gestionar_estudiantes" />
+                android:title="@string/menu_gestionar_estudiantes"
+                android:visible="false" />
             <item
                 android:id="@+id/nav_perfil"
                 android:icon="@android:drawable/ic_menu_myplaces"

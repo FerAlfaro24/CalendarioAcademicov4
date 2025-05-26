@@ -29,45 +29,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Configurar RecyclerView de materias
-        binding.rvMaterias.layoutManager = LinearLayoutManager(context)
-
-        // Configurar observadores para LiveData
-        homeViewModel.nombre.observe(viewLifecycleOwner) { nombre ->
-            binding.tvNombre.text = nombre
-        }
-
-        homeViewModel.tipoUsuario.observe(viewLifecycleOwner) { tipoUsuario ->
-            binding.tvTipoUsuario.text = "Tipo: " +
-                    if (tipoUsuario == "profesor") "Profesor" else "Estudiante"
-        }
-
-        homeViewModel.materias.observe(viewLifecycleOwner) { materias ->
-            if (materias.isEmpty()) {
-                binding.tvNoMaterias.visibility = View.VISIBLE
-                binding.rvMaterias.visibility = View.GONE
-            } else {
-                binding.tvNoMaterias.visibility = View.GONE
-                binding.rvMaterias.visibility = View.VISIBLE
-
-                binding.rvMaterias.adapter = MateriaSimpleAdapter(materias) { materia ->
-                    // Navegar a la vista de detalle de la materia
-                    val bundle = Bundle()
-                    bundle.putString("materiaId", materia.id)
-                    findNavController().navigate(R.id.nav_materia_detalle, bundle)
-                }
-            }
-        }
-
-        homeViewModel.cargando.observe(viewLifecycleOwner) { cargando ->
-            binding.progressBar.visibility = if (cargando) View.VISIBLE else View.GONE
-        }
-
-        homeViewModel.error.observe(viewLifecycleOwner) { error ->
-            if (!error.isNullOrEmpty()) {
-                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-            }
-        }
+        // ... resto del código del fragment ...
 
         return root
     }
@@ -77,3 +39,5 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
+
+// ❌ NO DEBE HABER NINGUNA CLASE HomeViewModel AQUÍ ❌

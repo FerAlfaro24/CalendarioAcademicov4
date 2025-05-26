@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardNotificacion"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivIconoTipo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_dialog_info"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTituloNotificacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            app:layout_constraintStart_toEndOf="@+id/ivIconoTipo"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Nuevo Examen" />
+
+        <TextView
+            android:id="@+id/tvMensajeNotificacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            app:layout_constraintStart_toEndOf="@+id/ivIconoTipo"
+            app:layout_constraintTop_toBottomOf="@+id/tvTituloNotificacion"
+            tools:text="Se ha creado un nuevo examen para la materia de Análisis y Diseño de Sistemas" />
+
+        <TextView
+            android:id="@+id/tvFechaNotificacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toStartOf="@+id/indicadorNoLeida"
+            app:layout_constraintStart_toEndOf="@+id/ivIconoTipo"
+            app:layout_constraintTop_toBottomOf="@+id/tvMensajeNotificacion"
+            tools:text="25/05/2025 10:30" />
+
+        <View
+            android:id="@+id/indicadorNoLeida"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:background="@color/purple_500"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

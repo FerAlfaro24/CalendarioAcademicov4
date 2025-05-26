@@ -7,4 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Colores para tipos de eventos -->
+    <color name="color_examen">#F44336</color> <!-- Rojo -->
+    <color name="color_exposicion">#FF9800</color> <!-- Naranja -->
+    <color name="color_proyecto">#9C27B0</color> <!-- Púrpura -->
+    <color name="color_tarea">#2196F3</color> <!-- Azul -->
+    <color name="color_dia_libre">#4CAF50</color> <!-- Verde -->
+
+    <!-- Colores para notificaciones -->
+    <color name="color_notificacion_no_leida">#E8F5E8</color> <!-- Verde claro -->
+    <color name="color_texto_secundario">#757575</color> <!-- Gris -->
 </resources>

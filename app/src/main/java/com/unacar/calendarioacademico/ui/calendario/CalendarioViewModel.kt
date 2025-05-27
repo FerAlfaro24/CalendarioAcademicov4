@@ -130,23 +130,39 @@ class CalendarioViewModel : ViewModel() {
 
             db.collection("eventos")
                 .whereEqualTo("idMateria", idMateria)
-                .whereGreaterThanOrEqualTo("fecha", inicioDelDia)
-                .whereLessThanOrEqualTo("fecha", finDelDia)
-                .get()
+                .get() // Quitamos el filtro de fecha primero para ver todos los eventos
                 .addOnSuccessListener { querySnapshot ->
                     materiasConsultadas++
                     Log.d(TAG, "--- Materia: $idMateria ---")
-                    Log.d(TAG, "Eventos encontrados para la fecha: ${querySnapshot.size()}")
+                    Log.d(TAG, "Total eventos en la materia: ${querySnapshot.size()}")
 
                     for (documento in querySnapshot.documents) {
                         val evento = documento.toObject(Evento::class.java)
                         if (evento != null) {
                             evento.id = documento.id
-                            todosLosEventos.add(evento)
 
                             val fechaEvento = Date(evento.fecha)
-                            val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                            Log.d(TAG, "Evento: ${evento.titulo} - ${dateFormat.format(fechaEvento)} - ${evento.hora}")
+                            val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                            Log.d(TAG, "Evento encontrado:")
+                            Log.d(TAG, "  - ID: ${evento.id}")
+                            Log.d(TAG, "  - Título: ${evento.titulo}")
+                            Log.d(TAG, "  - Fecha timestamp: ${evento.fecha}")
+                            Log.d(TAG, "  - Fecha formateada: ${dateFormat.format(fechaEvento)}")
+                            Log.d(TAG, "  - Hora: ${evento.hora}")
+                            Log.d(TAG, "  - Tipo: ${evento.tipo}")
+
+                            // Verificar si está en el rango
+                            val enRango = evento.fecha >= inicioDelDia && evento.fecha <= finDelDia
+                            Log.d(TAG, "  - En rango de fecha?: $enRango")
+
+                            if (enRango) {
+                                todosLosEventos.add(evento)
+                                Log.d(TAG, "  ✓ Evento agregado a la lista")
+                            } else {
+                                Log.d(TAG, "  ✗ Evento fuera del rango")
+                            }
+                        } else {
+                            Log.w(TAG, "Evento nulo en documento: ${documento.id}")
                         }
                     }
 
@@ -162,6 +178,10 @@ class CalendarioViewModel : ViewModel() {
                             if (partes.size == 2) {
                                 partes[0].toIntOrNull()?.times(60)?.plus(partes[1].toIntOrNull() ?: 0) ?: 0
                             } else 0
+                        }
+
+                        todosLosEventos.forEachIndexed { index, evento ->
+                            Log.d(TAG, "Evento ${index + 1}: ${evento.titulo} a las ${evento.hora}")
                         }
 
                         _eventosDelDia.value = todosLosEventos

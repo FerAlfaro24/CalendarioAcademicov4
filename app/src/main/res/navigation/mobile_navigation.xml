@@ -22,7 +22,11 @@
         android:id="@+id/nav_calendario"
         android:name="com.unacar.calendarioacademico.ui.calendario.CalendarioFragment"
         android:label="@string/menu_calendario"
-        tools:layout="@layout/fragment_calendario" />
+        tools:layout="@layout/fragment_calendario">
+        <action
+            android:id="@+id/action_calendario_to_detalle_evento"
+            app:destination="@id/nav_detalle_evento" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_materias"
@@ -184,7 +188,6 @@
             app:argType="string" />
     </fragment>
 
-    <!-- Nuevo: Editar evento -->
     <fragment
         android:id="@+id/nav_editar_evento"
         android:name="com.unacar.calendarioacademico.ui.eventos.EditarEventoFragment"
@@ -194,4 +197,5 @@
             android:name="eventoId"
             app:argType="string" />
     </fragment>
+
 </navigation>

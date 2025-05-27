@@ -174,7 +174,7 @@ class HomeViewModel : ViewModel() {
             return
         }
 
-        // Cargar eventos por materia individual para evitar problemas con whereIn
+        // NUEVA ESTRATEGIA: Obtener TODOS los eventos de las materias y filtrar en memoria
         val db = FirebaseFirestore.getInstance()
         val todosLosEventos = mutableListOf<Evento>()
         var materiasConsultadas = 0
@@ -185,11 +185,9 @@ class HomeViewModel : ViewModel() {
         for (idMateria in idsMaterias) {
             Log.d(TAG, "Consultando eventos para materia: $idMateria")
 
+            // Consulta simple SIN orderBy para evitar necesidad de índice
             db.collection("eventos")
                 .whereEqualTo("idMateria", idMateria)
-                .whereGreaterThanOrEqualTo("fecha", fechaActual)
-                .orderBy("fecha", Query.Direction.ASCENDING)
-                .limit(3) // Limitar por materia
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     materiasConsultadas++
@@ -199,16 +197,27 @@ class HomeViewModel : ViewModel() {
                         val evento = documento.toObject(Evento::class.java)
                         if (evento != null) {
                             evento.id = documento.id
-                            todosLosEventos.add(evento)
-                            Log.d(TAG, "Evento agregado: ${evento.titulo} - Fecha: ${evento.fecha}")
+
+                            // Filtrar en memoria solo eventos futuros
+                            if (evento.fecha >= fechaActual) {
+                                todosLosEventos.add(evento)
+                                Log.d(TAG, "Evento futuro agregado: ${evento.titulo} - Fecha: ${evento.fecha}")
+                            } else {
+                                Log.d(TAG, "Evento pasado ignorado: ${evento.titulo} - Fecha: ${evento.fecha}")
+                            }
                         }
                     }
 
+                    // Cuando terminemos con todas las materias
                     if (materiasConsultadas == idsMaterias.size) {
-                        // Ordenar por fecha y tomar solo los primeros 3
+                        // Ordenar por fecha en memoria y tomar solo los primeros 3
                         todosLosEventos.sortBy { it.fecha }
                         val proximosEventos = todosLosEventos.take(3)
                         Log.d(TAG, "Próximos eventos finales: ${proximosEventos.size}")
+
+                        for (evento in proximosEventos) {
+                            Log.d(TAG, "Evento final: ${evento.titulo} - ${evento.fecha}")
+                        }
 
                         _proximosEventos.value = proximosEventos
                         _cargando.value = false
@@ -218,6 +227,7 @@ class HomeViewModel : ViewModel() {
                     materiasConsultadas++
                     Log.e(TAG, "Error al cargar eventos para materia $idMateria: ${exception.message}", exception)
 
+                    // Cuando terminemos con todas las materias (incluso con errores)
                     if (materiasConsultadas == idsMaterias.size) {
                         todosLosEventos.sortBy { it.fecha }
                         val proximosEventos = todosLosEventos.take(3)

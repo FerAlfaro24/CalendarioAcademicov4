@@ -53,11 +53,8 @@ class MainActivity : AppCompatActivity() {
                 // Para profesores: mostrar selector de materias para crear evento
                 mostrarSelectorMaterias(view)
             } else {
-                // Si es estudiante, puede filtrar su calendario
-                Snackbar.make(view, "Filtrar calendario", Snackbar.LENGTH_LONG)
-                    .setAction("Filtrar") {
-                        Toast.makeText(this, "Funcionalidad de filtrado pendiente", Toast.LENGTH_SHORT).show()
-                    }.show()
+                // Para estudiantes: no hacer nada o mostrar mensaje
+                Snackbar.make(view, "Funcionalidad no disponible para estudiantes", Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -171,8 +168,8 @@ class MainActivity : AppCompatActivity() {
             menu.findItem(R.id.nav_crear_materia)?.isVisible = false
             menu.findItem(R.id.nav_gestionar_estudiantes)?.isVisible = false
 
-            // Cambiar icono del botón flotante para estudiantes (filtro)
-            binding.appBarMain.fab.setImageResource(android.R.drawable.ic_menu_search)
+            // OCULTAR completamente el botón flotante para estudiantes
+            binding.appBarMain.fab.visibility = View.GONE
         }
     }
 

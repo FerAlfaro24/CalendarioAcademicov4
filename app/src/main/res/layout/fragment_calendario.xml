@@ -47,10 +47,10 @@
         android:textAlignment="textEnd"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:textColor="@color/purple_700"
+        android:textColor="@color/color_notificacion_no_leida"
         app:layout_constraintBottom_toBottomOf="@+id/tvEventosDelDia"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvEventosDelDia"
+        app:layout_constraintStart_toEndOf="@+id/tvEPventosDelDia"
         app:layout_constraintTop_toTopOf="@+id/tvEventosDelDia"
         tools:text="25 de mayo, 2025" />
 
